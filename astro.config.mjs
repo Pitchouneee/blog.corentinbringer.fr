@@ -40,11 +40,26 @@ export default defineConfig({
 				// },
 				{
 					label: 'Architecture logicielle',
-					autogenerate: { directory: 'architecture_logicielle' },
+					items: [
+						{
+							label: 'Design Patterns',
+							autogenerate: { directory: 'architecture_logicielle/design_patterns' },
+						},
+						{
+							label: 'Microservices',
+							autogenerate: { directory: 'architecture_logicielle/microservices' },
+						},
+					],
 				},
 				{
 					label: 'DevOps',
-					autogenerate: { directory: 'devops' },
+					items: [
+						{
+							label: 'Conteneurisation',
+							autogenerate: { directory: 'devops/conteneurisation' },
+						},
+					],
+					// autogenerate: { directory: 'devops' },
 				},
 			],
 		}),
