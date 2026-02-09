@@ -8,7 +8,7 @@ export default defineConfig({
 	site: 'https://blog.corentinbringer.fr',
 	integrations: [
 		starlight({
-			title: 'My Docs',
+			title: 'arch.log | Corentin BRINGER',
 			head: [
 				// Charger le script gtag.js
 				{
@@ -61,6 +61,9 @@ export default defineConfig({
 					],
 					// autogenerate: { directory: 'devops' },
 				},
+			],
+			customCss: [
+				'./src/styles/custom.css',
 			],
 		}),
 		mermaid()
