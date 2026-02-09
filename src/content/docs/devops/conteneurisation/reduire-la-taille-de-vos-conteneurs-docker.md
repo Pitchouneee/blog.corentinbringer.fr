@@ -1,10 +1,6 @@
 ---
 title: Réduire la taille de vos conteneurs Docker
-author: Corentin
-date: 2025-01-03 12:00:00 +0100
-categories: [Conteneurisation]
-tags: [Docker, Best Practices, Performance]
-render_with_liquid: false
+description: Découvrez les meilleures pratiques pour réduire la taille de vos images Docker : images légères, .dockerignore, multi-stage builds et optimisation des couches.
 ---
 
 Dans le monde de la conteneurisation, avoir des images Docker légères, c’est un peu comme voyager avec un bagage cabine : plus rapide, plus pratique, et beaucoup moins de stress. Voici quelques astuces concrètes pour optimiser vos images Docker.

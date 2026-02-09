@@ -1,11 +1,6 @@
 ---
 title: Comprendre le Design Pattern Strategy
-author: Corentin
-date: 2025-12-17 12:00:00 +0100
-categories: [Architecture logicielle]
-tags: [Java, POO, SOLID, Refactoring, Clean Code, Strategy Pattern]
-render_with_liquid: false
-mermaid: true
+description: Découvrez le Design Pattern Strategy en Java à travers un exemple concret de système de paiement. Une approche propre pour remplacer les if/else, respecter SOLID et rendre votre code extensible.
 ---
 
 # Comprendre le Design Pattern Strategy : Le système de paiement flexible
