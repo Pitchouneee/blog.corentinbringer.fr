@@ -1,9 +1,7 @@
 ---
-title: Comprendre le Design Pattern Strategy
+title: Comprendre le Design Pattern Strategy : Le système de paiement flexible
 description: Découvrez le Design Pattern Strategy en Java à travers un exemple concret de système de paiement. Une approche propre pour remplacer les if/else, respecter SOLID et rendre votre code extensible.
 ---
-
-# Comprendre le Design Pattern Strategy : Le système de paiement flexible
 
 En programmation, nous sommes souvent confrontés à un dilemme : comment gérer un code qui doit effectuer une même tâche de plusieurs manières différentes, sans finir avec des structures conditionnelles interminables ?
 
