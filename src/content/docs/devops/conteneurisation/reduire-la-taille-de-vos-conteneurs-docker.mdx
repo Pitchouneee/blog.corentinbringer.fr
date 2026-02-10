@@ -3,7 +3,13 @@ title: Réduire la taille de vos conteneurs Docker
 description: "Images légères, .dockerignore, multi-stage builds et optimisation des couches : le guide complet."
 ---
 
-import { Aside, Tabs, TabItem, Steps, Badge } from '@astrojs/starlight/components';
+import {
+  Aside,
+  Tabs,
+  TabItem,
+  Steps,
+  Badge,
+} from "@astrojs/starlight/components";
 
 Dans le monde de la conteneurisation, avoir des images Docker légères, c’est un peu comme voyager avec un bagage cabine : plus rapide, plus pratique, et beaucoup moins de stress. Voici quelques astuces concrètes pour optimiser vos images Docker.
 
@@ -15,14 +21,10 @@ Commencer avec une image légère, c’est comme construire une maison avec des 
 
 <Tabs>
   <TabItem label="❌ Mauvaise idée">
-    ```dockerfile
-    FROM eclipse-temurin:21
-    ```
+    ```dockerfile FROM eclipse-temurin:21 ```
   </TabItem>
   <TabItem label="✅ Bonne pratique">
-    ```dockerfile
-    FROM eclipse-temurin:21-jre-alpine
-    ```
+    ```dockerfile FROM eclipse-temurin:21-jre-alpine ```
   </TabItem>
 </Tabs>
 
@@ -35,9 +37,9 @@ L’image `eclipse-temurin:21-jre-alpine` offre tout ce dont vous avez besoin sa
 Installer des dépendances, c’est bien, mais pensez à faire le ménage après pour ne pas encombrer votre image avec des fichiers temporaires inutiles.
 
 ```dockerfile
-RUN apt-get update 
-RUN apt-get install -y openjdk-21-jre 
-RUN apt-get clean 
+RUN apt-get update
+RUN apt-get install -y openjdk-21-jre
+RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 
 ```
@@ -45,7 +47,9 @@ RUN rm -rf /var/lib/apt/lists/*
 Le ménage post-installation garantit une image propre et efficace. Pas de déchets !
 
 <Aside type="caution">
-Chaque commande `RUN` effectue une tâche spécifique. Cela peut aider à déboguer, mais attention : **cela ajoute des couches inutiles**. Voyons pourquoi dans la section suivante.
+  Chaque commande `RUN` effectue une tâche spécifique. Cela peut aider à
+  déboguer, mais attention : **cela ajoute des couches inutiles**. Voyons
+  pourquoi dans la section suivante.
 </Aside>
 
 ---
@@ -79,7 +83,9 @@ RUN apt-get update && apt-get install -y \
 ```
 
 <Aside type="tip" title="Best Practice">
-⚠️ Contrairement à l’exemple précédent dans la section "Faites le ménage", ici les commandes `RUN` sont combinées pour minimiser le nombre de couches. C’est la meilleure pratique pour une image optimisée.
+  ⚠️ Contrairement à l’exemple précédent dans la section "Faites le ménage", ici
+  les commandes `RUN` sont combinées pour minimiser le nombre de couches. C’est
+  la meilleure pratique pour une image optimisée.
 </Aside>
 
 Moins de couches, c’est une image plus légère et une construction plus rapide. Simple, non ?
@@ -101,22 +107,27 @@ Voici le bloc corrigé pour ton fichier `.mdx` :
 Les builds multi-steps permettent de tout faire dans une première étape (compilation, tests, etc.) et de ne garder que le strict nécessaire dans l'image finale.
 
 <Steps>
-1.  **Étape 1 : Compilation**
-    On utilise une image Maven complète pour compiler le projet.
-    ```dockerfile
-    FROM maven:3.9.9-eclipse-temurin-21 AS build
-    WORKDIR /app
-    COPY . .
-    RUN mvn clean package -DskipTests
-    ```
 
-2.  **Étape 2 : Déploiement**
-    On ne garde que le JAR final sur une image JRE légère.
-    ```dockerfile
-    FROM eclipse-temurin:21-jre-alpine
-    COPY --from=build /app/target/*.jar /app/app.jar
-    CMD ["java", "-jar", "/app/app.jar"]
-    ```
+1. **Étape 1 : Compilation**
+   On utilise une image Maven complète pour compiler le projet.
+
+   ```dockerfile
+   FROM maven:3.9.9-eclipse-temurin-21 AS build
+   WORKDIR /app
+   COPY . .
+   RUN mvn clean package -DskipTests
+   ```
+
+2. **Étape 2 : Déploiement**
+
+   On ne garde que le JAR final sur une image JRE légère.
+
+   ```dockerfile
+   FROM eclipse-temurin:21-jre-alpine
+   COPY --from=build /app/target/*.jar /app/app.jar
+   CMD ["java", "-jar", "/app/app.jar"]
+   ```
+
 </Steps>
 
 Ce processus divise le travail en étapes claires et optimise le résultat final. Votre image sera légère et prête pour la production.
