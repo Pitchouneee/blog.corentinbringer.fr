@@ -5,7 +5,7 @@ description: "Commandes utiles et pense-bêtes pour administrer et débugger Key
 
 # Pense-bête Keycloak
 
-## Exporter un Realm complet AVEC ses utilisateurs (depuis une base H2 sous Docker)
+## Exporter un realm complet AVEC ses utilisateurs (depuis une base H2 sous Docker)
 
 ### Le piège de l'interface d'administration
 L'interface d'administration de Keycloak permet d'exporter un Realm très facilement en quelques clics. **Mais il y a un piège majeur : cet export n'inclut pas les comptes utilisateurs.** L'UI ne récupère que la configuration pure (les clients, les rôles, les flux d'authentification). 
@@ -23,16 +23,6 @@ On commence par copier le dossier de données du conteneur en cours d'exécution
 ```bash
 docker cp <CONTAINER_ID>:/opt/keycloak/data/h2 /opt/keycloak-h2 
 ```
-
-Tu as complètement raison ! Un bon architecte ne peut pas laisser traîner un `chmod 777` sur son blog sans transpirer un peu. 
-
-L'approche de l'ironie + le disclaimer est très bonne car elle est **honnête**. Dans la vraie vie, sur un dossier temporaire en local juste pour faire un export, 99% des gens font un `777` pour aller vite. L'assumer avec humour rend ton blog beaucoup plus humain et agréable à lire.
-
-Mais pour garder ta crédibilité technique, le mieux est de proposer la "solution rapide et sale" avec l'ironie, **suivie de la "solution propre"**. Cela prouve que tu sais pourquoi tu fais les choses.
-
-Voici comment je te propose de réécrire cette étape 2 (tu peux remplacer le bloc dans ton fichier par celui-ci) :
-
-***
 
 ### 2. Gérer les permissions Docker (Le conflit d'identité)
 Le conteneur éphémère que nous allons lancer à l'étape 4 tourne avec son propre utilisateur interne (généralement l'utilisateur `keycloak`, avec l'UID `1000`). S'il n'a pas les droits d'écriture sur le dossier que nous venons de copier sur notre hôte (qui appartient probablement à `root` ou à votre utilisateur local), l'export plantera avec une erreur *Permission denied*.
