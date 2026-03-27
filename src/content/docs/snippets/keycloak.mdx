@@ -1,0 +1,87 @@
+---
+title: "Keycloak"
+description: "Commandes utiles et pense-bêtes pour administrer et débugger Keycloak"
+---
+
+# Pense-bête Keycloak
+
+## Exporter un Realm complet AVEC ses utilisateurs (depuis une base H2 sous Docker)
+
+### Le piège de l'interface d'administration
+L'interface d'administration de Keycloak permet d'exporter un Realm très facilement en quelques clics. **Mais il y a un piège majeur : cet export n'inclut pas les comptes utilisateurs.** L'UI ne récupère que la configuration pure (les clients, les rôles, les flux d'authentification). 
+
+Si votre but est de **migrer un environnement complet** (par exemple, passer de votre environnement de dev local vers une vraie base de données de test) sans perdre les comptes de tests que vous avez créés, vous êtes obligés de passer par l'outil en ligne de commande de Keycloak avec le flag `--users realm_file`.
+
+### Le problème avec la base H2
+Puisque nous utilisons la base par défaut (H2), qui stocke tout dans un simple fichier local, nous faisons face au problème du *file locking*. Si vous essayez d'exporter les données pendant que Keycloak tourne, vous risquez une corruption de la base. 
+
+Voici la méthode propre et sécurisée pour extraire la configuration complète d'un Realm (incluant les utilisateurs) sans rien casser.
+
+### 1. Sauvegarder la base de données en local
+On commence par copier le dossier de données du conteneur en cours d'exécution vers notre machine hôte. Cela nous donne une copie de travail sécurisée.
+
+```bash
+docker cp <CONTAINER_ID>:/opt/keycloak/data/h2 /opt/keycloak-h2 
+```
+
+Tu as complètement raison ! Un bon architecte ne peut pas laisser traîner un `chmod 777` sur son blog sans transpirer un peu. 
+
+L'approche de l'ironie + le disclaimer est très bonne car elle est **honnête**. Dans la vraie vie, sur un dossier temporaire en local juste pour faire un export, 99% des gens font un `777` pour aller vite. L'assumer avec humour rend ton blog beaucoup plus humain et agréable à lire.
+
+Mais pour garder ta crédibilité technique, le mieux est de proposer la "solution rapide et sale" avec l'ironie, **suivie de la "solution propre"**. Cela prouve que tu sais pourquoi tu fais les choses.
+
+Voici comment je te propose de réécrire cette étape 2 (tu peux remplacer le bloc dans ton fichier par celui-ci) :
+
+***
+
+### 2. Gérer les permissions Docker (Le conflit d'identité)
+Le conteneur éphémère que nous allons lancer à l'étape 4 tourne avec son propre utilisateur interne (généralement l'utilisateur `keycloak`, avec l'UID `1000`). S'il n'a pas les droits d'écriture sur le dossier que nous venons de copier sur notre hôte (qui appartient probablement à `root` ou à votre utilisateur local), l'export plantera avec une erreur *Permission denied*.
+
+**La solution rapide :**
+On ouvre tous les droits sur notre copie locale. Étant donné que c'est un dossier temporaire sur un poste de dev qui va être supprimé juste après, on peut fermer les yeux pour cette fois.
+```bash
+chmod -R 777 /opt/keycloak-h2
+# Oui, je sais, le 777 c'est le mal absolu. Ne faites ça que sur votre copie locale jetable !
+```
+
+**La solution propre :**
+Plutôt que d'ouvrir les droits à tout le monde, on donne proprement la propriété du dossier à l'UID `1000`, qui est celui attendu par l'image Docker officielle de Keycloak.
+```bash
+chown -R 1000:1000 /opt/keycloak-h2
+```
+
+### 3. Arrêter l'instance principale
+Pour libérer les verrous sur le fichier de base de données H2 original, il faut stopper le conteneur principal.
+
+```bash
+docker stop <CONTAINER_ID>
+```
+
+### 4. Lancer l'export via un conteneur éphémère
+Au lieu d'installer les outils Keycloak sur notre machine, on va lancer un conteneur jetable (`--rm`) dont le seul but est de lire notre copie de base de données et de générer un fichier JSON.
+
+**Anatomie de la commande :**
+* `-v /opt/keycloak-h2:...` : On monte notre copie de la base de données.
+* `-v /opt/export:...` : On crée un volume pour récupérer le fichier de sortie sur notre hôte.
+* `--entrypoint ... export` : On surcharge le comportement par défaut pour exécuter le script d'export au lieu de démarrer le serveur.
+* `--users realm_file` : Il force l'export des comptes utilisateurs dans le même fichier.
+
+```bash
+docker run --rm \
+  -v /opt/keycloak-h2:/opt/keycloak/data/h2 \
+  -v /opt/export:/tmp/export \
+  -e KEYCLOAK_ADMIN=admin \
+  -e 'KEYCLOAK_ADMIN_PASSWORD=<VOTRE_MOT_DE_PASSE>' \
+  --entrypoint /opt/keycloak/bin/kc.sh \
+  quay.io/keycloak/keycloak:<VOTRE_VERSION_DE_KEYCLOAK> export \
+  --dir /tmp/export \
+  --users realm_file \
+  --realm <NOM_REALM>
+```
+
+### 5. Redémarrer le service
+L'export JSON complet est maintenant généré dans votre dossier local `/opt/export`. Vous pouvez relancer votre instance de développement.
+
+```bash
+docker start <CONTAINER_ID>
+```

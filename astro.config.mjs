@@ -62,6 +62,10 @@ export default defineConfig({
 					],
 					// autogenerate: { directory: 'devops' },
 				},
+				{
+					label: 'Snippets',
+					autogenerate: { directory: 'snippets' },
+				},
 			],
 			customCss: [
 				'./src/styles/custom.css',
