@@ -24,7 +24,7 @@ On commence par copier le dossier de données du conteneur en cours d'exécution
 docker cp <CONTAINER_ID>:/opt/keycloak/data/h2 /opt/keycloak-h2 
 ```
 
-### 2. Gérer les permissions Docker (Le conflit d'identité)
+### 2. Gérer les permissions Docker
 Le conteneur éphémère que nous allons lancer à l'étape 4 tourne avec son propre utilisateur interne (généralement l'utilisateur `keycloak`, avec l'UID `1000`). S'il n'a pas les droits d'écriture sur le dossier que nous venons de copier sur notre hôte (qui appartient probablement à `root` ou à votre utilisateur local), l'export plantera avec une erreur *Permission denied*.
 
 **La solution rapide :**
