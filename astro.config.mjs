@@ -69,6 +69,18 @@ export default defineConfig({
 							label: 'Web client',
 							autogenerate: { directory: 'pentest/web_client' },
 						},
+						{
+							label: 'Web serveur',
+							autogenerate: { directory: 'pentest/web_serveur' },
+						},
+						{
+							label: 'Stéganographie',
+							autogenerate: { directory: 'pentest/steganographie' },
+						},
+						{
+							label: 'Réseau',
+							autogenerate: { directory: 'pentest/reseau' },
+						},
 					],
 				},
 				{
