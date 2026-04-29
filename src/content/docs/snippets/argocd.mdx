@@ -1,0 +1,42 @@
+---
+title: "ArgoCD"
+description: "Pense-bêtes pour débloquer des applications ArgoCD et forcer la suppression de ressources récalcitrantes."
+---
+
+# Pense-bête ArgoCD
+
+## Débloquer une application ArgoCD "Fantôme"
+
+**Le contexte :** Vous avez supprimé une application depuis l'interface web ArgoCD ou via Git, mais elle reste affichée avec une icône de chargement infinie et le statut `Deleting`. 
+
+**Le problème d'architecture :** ArgoCD attache un "Finalizer" (souvent `resources-finalizer.argocd.argoproj.io`) à l'objet Application. Ce mécanisme de Kubernetes interdit la suppression de l'objet tant qu'ArgoCD n'a pas confirmé que toutes les ressources enfants (pods, services, ingress...) ont bien été détruites. Si une seule ressource enfant bloque, l'application entière reste bloquée.
+
+**La solution :** Retirer brutalement le finalizer en patchant l'objet directement sur le cluster où tourne ArgoCD.
+
+```bash
+kubectl patch applications.argoproj.io <NOM_DE_L_APP> -n argocd -p '{"metadata":{"finalizers":null}}' --type merge
+```
+*Dès que cette commande est lancée, l'application disparaîtra instantanément de l'interface.*
+
+---
+
+## Cas de force majeure : Forcer la suppression d'une ressource K8s
+
+**Le contexte :** C'est souvent la cause racine du problème précédent. Si l'application ArgoCD bloquait, c'est parce qu'une ressource K8s spécifique (comme un Ingress ou une ressource Custom) refusait de mourir.
+
+**Pourquoi ça arrive ?** Très souvent, cela concerne des ressources liées à des opérateurs externes ou des fournisseurs cloud. Par exemple, un Ingress attend que l'Ingress Controller (ou le cloud provider) supprime le Load Balancer physique avant de valider sa propre suppression. Si le contrôleur est planté, la ressource K8s attendra pour l'éternité.
+
+**La solution :** Réduire le délai de grâce de Kubernetes à zéro et forcer la suppression.
+
+### Exemple avec un Ingress bloqué
+```bash
+kubectl delete ingress <NOM_INGRESS> -n <NAMESPACE> --force --grace-period=0
+```
+
+### Exemple avec une ressource Custom (CRD) bloquée
+Cela arrive souvent avec des outils d'observabilité ou de sécurité (ex: OpenTelemetry, Cert-Manager).
+```bash
+kubectl delete instrumentation.opentelemetry.io <NOM_INSTRUMENTATION> -n <NAMESPACE> --force --grace-period=0
+```
+
+> **⚠️ Avertissement :** Utiliser `--force --grace-period=0` ne détruit que l'objet logique dans la base de données de Kubernetes (etcd). Si cette ressource pilotait une infrastructure externe (comme un Load Balancer AWS/Azure ou un volume persistant), cette infrastructure externe n'a peut-être pas été supprimée ! Pensez à vérifier du côté de votre Cloud Provider pour éviter les coûts inutiles (ressources orphelines).
