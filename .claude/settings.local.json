@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:repository.root-me.org)",
+      "WebSearch"
+    ]
+  }
+}

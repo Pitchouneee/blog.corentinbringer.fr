@@ -63,6 +63,15 @@ export default defineConfig({
 					// autogenerate: { directory: 'devops' },
 				},
 				{
+					label: 'Pentest',
+					items: [
+						{
+							label: 'Web client',
+							autogenerate: { directory: 'pentest/web_client' },
+						},
+					],
+				},
+				{
 					label: 'Snippets',
 					autogenerate: { directory: 'snippets' },
 				},
