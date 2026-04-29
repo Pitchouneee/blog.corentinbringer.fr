@@ -81,6 +81,10 @@ export default defineConfig({
 							label: 'Réseau',
 							autogenerate: { directory: 'pentest/reseau' },
 						},
+						{
+							label: 'Infrastructure',
+							autogenerate: { directory: 'pentest/infrastructure' },
+						},
 					],
 				},
 				{
