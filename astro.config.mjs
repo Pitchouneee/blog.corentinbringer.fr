@@ -41,66 +41,80 @@ export default defineConfig({
 				// },
 				{
 					label: 'Architecture logicielle',
+					collapsed: true,
 					items: [
 						{
 							label: 'Design Patterns',
+							collapsed: true,
 							autogenerate: { directory: 'architecture_logicielle/design_patterns' },
 						},
 						{
 							label: 'Microservices',
+							collapsed: true,
 							autogenerate: { directory: 'architecture_logicielle/microservices' },
 						},
 					],
 				},
 				{
 					label: 'DevOps',
+					collapsed: true,
 					items: [
 						{
 							label: 'Conteneurisation',
+							collapsed: true,
 							autogenerate: { directory: 'devops/conteneurisation' },
 						},
 					],
-					// autogenerate: { directory: 'devops' },
 				},
 				{
 					label: 'Pentest',
+					collapsed: true,
 					items: [
 						{
 							label: 'Web client',
+							collapsed: true,
 							autogenerate: { directory: 'pentest/web_client' },
 						},
 						{
 							label: 'Web serveur',
+							collapsed: true,
 							autogenerate: { directory: 'pentest/web_serveur' },
 						},
 						{
 							label: 'Stéganographie',
+							collapsed: true,
 							autogenerate: { directory: 'pentest/steganographie' },
 						},
 						{
 							label: 'Réseau',
+							collapsed: true,
 							autogenerate: { directory: 'pentest/reseau' },
 						},
 						{
 							label: 'Infrastructure',
+							collapsed: true,
 							autogenerate: { directory: 'pentest/infrastructure' },
 						},
 						{
 							label: 'Forensic',
+							collapsed: true,
 							autogenerate: { directory: 'pentest/forensic' },
 						},
 						{
 							label: 'Reverse',
+							collapsed: true,
 							autogenerate: { directory: 'pentest/reverse' },
 						},
 						{
 							label: 'Système',
+							collapsed: true,
 							autogenerate: { directory: 'pentest/systeme' },
 						},
 					],
 				},
 				{
 					label: 'Snippets',
+					collapsed: true,
 					autogenerate: { directory: 'snippets' },
 				},
 			],
