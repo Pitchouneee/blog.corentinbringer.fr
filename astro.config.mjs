@@ -85,6 +85,18 @@ export default defineConfig({
 							label: 'Infrastructure',
 							autogenerate: { directory: 'pentest/infrastructure' },
 						},
+						{
+							label: 'Forensic',
+							autogenerate: { directory: 'pentest/forensic' },
+						},
+						{
+							label: 'Reverse',
+							autogenerate: { directory: 'pentest/reverse' },
+						},
+						{
+							label: 'Système',
+							autogenerate: { directory: 'pentest/systeme' },
+						},
 					],
 				},
 				{
