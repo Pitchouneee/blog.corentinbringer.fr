@@ -1,37 +1,28 @@
 ---
 title: Bienvenue dans ma base de connaissances
-description: Architecte technique, Java/Spring, K8s et passionné d'Ultra-Trail.
-template: splash
-hero:
-  tagline: Architecture logicielle, performance Java et endurance. Retours d'expérience d'un architecte technique passionné par la transmission.
-  actions:
-    - text: Explorer les docs
-      link: /architecture_logicielle/design_patterns/comprendre-le-design-pattern-strategy/
-      icon: right-arrow
-      variant: primary
-    - text: Me suivre sur GitHub
-      link: https://github.com/Pitchouneee
-      icon: external
+description: Architecte technique, sécurité applicative, Java/Spring, K8s et passionné d'Ultra-Trail.
 ---
 
 import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
 
-## 🚀 Concevoir pour la performance et la durée
+## 🚀 Construire, déployer, tester
 
-En tant qu'**Architecte Technique**, je passe mes journées à concevoir des solutions robustes et mes nuits (parfois) à courir sur des sentiers de montagne. Ce blog est un espace de partage destiné à mes collègues, aux passionnés du web et à mes étudiants.
+**Architecte technique** le jour, je conçois et maintiens des applications Java/Spring en production. En parallèle, je creuse la sécurité applicative — d'abord sur Root-Me pour comprendre les mécanismes par moi-même, ensuite sur les applications de mon équipe pour identifier ce qui nous expose réellement.
+
+Ce blog rassemble ce que j'apprends en faisant.
 
 <CardGrid stagger>
-  <Card title="Backend Mastery" icon="laptop">
-    Expertise sur l'écosystème **Java** et **Spring Boot**. Design patterns, Clean Code et optimisation fine des performances applicatives.
+  <Card title="Backend & Architecture" icon="laptop">
+    Écosystème **Java** et **Spring Boot**. Design patterns, Clean Code et optimisation des performances applicatives.
   </Card>
   <Card title="Container & Ops" icon="setting">
-    Déploiement et exécution d'applications dans le monde réel avec **Docker** et **Kubernetes**. Du build à la mise en production.
+    Déploiement avec **Docker** et **Kubernetes**. Du build à la mise en production, et ce qui se passe quand la config est mauvaise.
+  </Card>
+  <Card title="Sécurité applicative" icon="warning">
+    Web client, web serveur, infrastructure, reverse, forensic. Notes issues de challenges **Root-Me** et de tests sur des applications réelles.
   </Card>
   <Card title="Transmission" icon="pencil">
-    Intervenant en école, j'utilise ce support pour vulgariser des concepts d'architecture complexes et guider la future génération de devs.
-  </Card>
-  <Card title="Résilience & Trail" icon="random">
-    L'analogie entre un **Ultra-Traileur** et une application distribuée ? La capacité à maintenir une performance stable malgré la fatigue et les imprévus.
+    Intervenant en école. Ce blog sert aussi de support pour expliquer des concepts d'architecture et de sécurité à des étudiants.
   </Card>
 </CardGrid>
 
@@ -39,18 +30,18 @@ En tant qu'**Architecte Technique**, je passe mes journées à concevoir des sol
 
 ## 🏔️ Pourquoi ce blog ?
 
-> "L'architecture, c'est comme un ultra : il ne s'agit pas juste de démarrer, il s'agit de s'assurer que l'application reste debout après des mois de production."
+> "On ne comprend vraiment un système qu'en essayant de le casser."
 
-J'ai conçu ce site comme une documentation vivante. Vous y trouverez :
-* Des **analyses de performance** pour tirer le meilleur de la JVM.
-* Des **analyses de design patterns** pour ne plus coder au hasard.
-* Mes supports de cours et retours d'expérience terrain.
+J'ai commencé par documenter de l'architecture et du DevOps. Puis j'ai commencé à faire des challenges Root-Me pour comprendre les vulnérabilités par moi-même, sans filet. Ça a changé la façon dont je conçois les applications — pas par peur, mais parce que voir concrètement comment une injection de commande ou une élévation de droits fonctionne change le regard qu'on pose sur son propre code.
 
-<Aside type="tip" title="Accès rapide">
-Si tu es ici pour les cours, commence par la section **Architecture logicielle**. Pour les astuces sur la conteneurisation, direction l'onglet **DevOps**.
+Vous trouverez ici :
+- Des **analyses de design patterns** et d'architecture logicielle
+- Des **notes de pentest** : mécanismes, exploitation, remédiation
+- Des **retours terrain** sur Docker, Kubernetes et la conteneurisation sécurisée
+
+<Aside type="tip" title="Par où commencer ?">
+Architecture logicielle et DevOps dans les sections du même nom. Pour la sécurité, la section **Pentest** couvre le web client, le web serveur, l'infrastructure, le reverse engineering et la stéganographie.
 </Aside>
 
 ## 🏃‍♂️ En dehors du terminal...
-Quand je ne suis pas en train de profiler une application Java ou de peaufiner une config K8s, je suis probablement sur les sentiers. Ultra-traileur habitué aux efforts de plusieurs jours (et nuits) dehors, je retrouve dans le sport cette même recherche d'optimisation et de dépassement que dans l'ingénierie logicielle.
-
-**Prêt à plonger dans le code ?**
+Quand je ne suis pas en train de concevoir une architecture ou d'analyser une APK, je suis probablement sur les sentiers. Ultra-traileur habitué aux efforts de plusieurs jours dehors — la même recherche d'endurance et d'adaptation que dans l'ingénierie.
