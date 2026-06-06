@@ -81,6 +81,11 @@ export default defineConfig({
 							autogenerate: { directory: 'pentest/web_serveur' },
 						},
 						{
+							label: 'Cryptographie',
+							collapsed: true,
+							autogenerate: { directory: 'pentest/crypto' },
+						},
+						{
 							label: 'Stéganographie',
 							collapsed: true,
 							autogenerate: { directory: 'pentest/steganographie' },
