@@ -115,6 +115,7 @@ export default defineConfig({
 							collapsed: true,
 							autogenerate: { directory: 'pentest/systeme' },
 						},
+						{ label: 'Ressources', slug: 'pentest/ressources' },
 					],
 				},
 				{
