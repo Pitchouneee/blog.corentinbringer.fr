@@ -32,13 +32,6 @@ export default defineConfig({
 			],
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/Pitchouneee' }],
 			sidebar: [
-				// {
-				// 	label: 'Guides',
-				// 	items: [
-				// 		// Each item here is one entry in the navigation menu.
-				// 		{ label: 'Example Guide', slug: 'guides/example' },
-				// 	],
-				// },
 				{
 					label: 'Architecture logicielle',
 					collapsed: true,
@@ -116,6 +109,27 @@ export default defineConfig({
 							autogenerate: { directory: 'pentest/systeme' },
 						},
 						{ label: 'Ressources', slug: 'pentest/ressources' },
+					],
+				},
+				{
+					label: 'Intelligence Artificielle',
+					collapsed: true,
+					items: [
+						{
+							label: 'Fondamentaux',
+							collapsed: true,
+							autogenerate: { directory: 'intelligence_artificielle/fondamentaux' },
+						},
+						{
+							label: 'Machine Learning',
+							collapsed: true,
+							autogenerate: { directory: 'intelligence_artificielle/machine_learning' },
+						},
+						{
+							label: 'Python et données',
+							collapsed: true,
+							autogenerate: { directory: 'intelligence_artificielle/python_data' },
+						},
 					],
 				},
 				{
