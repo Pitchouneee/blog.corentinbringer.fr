@@ -18,7 +18,7 @@ export default defineConfig({
 					metrics: { readingTime: true },
 					authors: {
 						corentin: {
-							name: 'Corentin Bringer',
+							name: 'Corentin BRINGER',
 							url: 'https://blog.corentinbringer.fr',
 						},
 					},
