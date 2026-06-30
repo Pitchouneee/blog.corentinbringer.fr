@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import starlightBlog from 'starlight-blog';
 import mermaid from 'astro-mermaid';
 import sitemap from '@astrojs/sitemap';
 
@@ -9,7 +10,25 @@ export default defineConfig({
 	site: 'https://blog.corentinbringer.fr',
 	integrations: [
 		starlight({
+			plugins: [
+				starlightBlog({
+					title: 'Section blog',
+					postCount: 5,
+					recentPostCount: 5,
+					metrics: { readingTime: true },
+					authors: {
+						corentin: {
+							name: 'Corentin Bringer',
+							url: 'https://blog.corentinbringer.fr',
+						},
+					},
+				}),
+			],
 			title: 'arch.log | Corentin BRINGER',
+			defaultLocale: 'root',
+			locales: {
+				root: { label: 'Français', lang: 'fr' },
+			},
 			head: [
 				// Charger le script gtag.js
 				{
@@ -39,12 +58,12 @@ export default defineConfig({
 						{
 							label: 'Design Patterns',
 							collapsed: true,
-							autogenerate: { directory: 'architecture_logicielle/design_patterns' },
+							items: [{ autogenerate: { directory: 'architecture_logicielle/design_patterns' } }],
 						},
 						{
 							label: 'Microservices',
 							collapsed: true,
-							autogenerate: { directory: 'architecture_logicielle/microservices' },
+							items: [{ autogenerate: { directory: 'architecture_logicielle/microservices' } }],
 						},
 					],
 				},
@@ -55,7 +74,7 @@ export default defineConfig({
 						{
 							label: 'Conteneurisation',
 							collapsed: true,
-							autogenerate: { directory: 'devops/conteneurisation' },
+							items: [{ autogenerate: { directory: 'devops/conteneurisation' } }],
 						},
 					],
 				},
@@ -66,49 +85,49 @@ export default defineConfig({
 						{
 							label: 'Web client',
 							collapsed: true,
-							autogenerate: { directory: 'pentest/web_client' },
+							items: [{ autogenerate: { directory: 'pentest/web_client' } }],
 						},
 						{
 							label: 'Web serveur',
 							collapsed: true,
-							autogenerate: { directory: 'pentest/web_serveur' },
+							items: [{ autogenerate: { directory: 'pentest/web_serveur' } }],
 						},
 						{
 							label: 'Cryptographie',
 							collapsed: true,
-							autogenerate: { directory: 'pentest/crypto' },
+							items: [{ autogenerate: { directory: 'pentest/crypto' } }],
 						},
 						{
 							label: 'Stéganographie',
 							collapsed: true,
-							autogenerate: { directory: 'pentest/steganographie' },
+							items: [{ autogenerate: { directory: 'pentest/steganographie' } }],
 						},
 						{
 							label: 'Réseau',
 							collapsed: true,
-							autogenerate: { directory: 'pentest/reseau' },
+							items: [{ autogenerate: { directory: 'pentest/reseau' } }],
 						},
 						{
 							label: 'Infrastructure',
 							collapsed: true,
-							autogenerate: { directory: 'pentest/infrastructure' },
+							items: [{ autogenerate: { directory: 'pentest/infrastructure' } }],
 						},
 						{
 							label: 'Forensic',
 							collapsed: true,
-							autogenerate: { directory: 'pentest/forensic' },
+							items: [{ autogenerate: { directory: 'pentest/forensic' } }],
 						},
 						{
 							label: 'Reverse',
 							collapsed: true,
-							autogenerate: { directory: 'pentest/reverse' },
+							items: [{ autogenerate: { directory: 'pentest/reverse' } }],
 						},
 						{
 							label: 'Système',
 							collapsed: true,
-							autogenerate: { directory: 'pentest/systeme' },
+							items: [{ autogenerate: { directory: 'pentest/systeme' } }],
 						},
-						{ label: 'Ressources', slug: 'pentest/ressources' },
+						{ slug: 'pentest/ressources' },
 					],
 				},
 				{
@@ -118,24 +137,24 @@ export default defineConfig({
 						{
 							label: 'Fondamentaux',
 							collapsed: true,
-							autogenerate: { directory: 'intelligence_artificielle/fondamentaux' },
+							items: [{ autogenerate: { directory: 'intelligence_artificielle/fondamentaux' } }],
 						},
 						{
 							label: 'Machine Learning',
 							collapsed: true,
-							autogenerate: { directory: 'intelligence_artificielle/machine_learning' },
+							items: [{ autogenerate: { directory: 'intelligence_artificielle/machine_learning' } }],
 						},
 						{
 							label: 'Python et données',
 							collapsed: true,
-							autogenerate: { directory: 'intelligence_artificielle/python_data' },
+							items: [{ autogenerate: { directory: 'intelligence_artificielle/python_data' } }],
 						},
 					],
 				},
 				{
 					label: 'Snippets',
 					collapsed: true,
-					autogenerate: { directory: 'snippets' },
+					items: [{ autogenerate: { directory: 'snippets' } }],
 				},
 			],
 			customCss: [
