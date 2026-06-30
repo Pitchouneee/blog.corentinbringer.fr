@@ -51,6 +51,7 @@ export default defineConfig({
 			],
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/Pitchouneee' }],
 			sidebar: [
+				{ slug: 'outils' },
 				{
 					label: 'Architecture logicielle',
 					collapsed: true,
@@ -127,7 +128,6 @@ export default defineConfig({
 							collapsed: true,
 							items: [{ autogenerate: { directory: 'pentest/systeme' } }],
 						},
-						{ slug: 'pentest/ressources' },
 					],
 				},
 				{

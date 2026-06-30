@@ -1,0 +1,273 @@
+---
+import type { Outil, Category } from '../data/outils';
+import { CATEGORY_COLORS } from '../data/outils';
+
+interface Props {
+  outils: Outil[];
+  categories: readonly string[];
+}
+
+const { outils, categories } = Astro.props;
+
+const totalCount = outils.length;
+---
+
+<div class="outils-wrapper">
+  <div class="outils-meta">
+    <span class="outils-total">{totalCount} outils · {categories.length} catégories</span>
+  </div>
+
+  <div class="outils-filters">
+    <button class="filter-btn active" data-filter="all">
+      Tous
+      <span class="filter-count">{totalCount}</span>
+    </button>
+    {categories.map(cat => {
+      const count = outils.filter(o => o.category === cat).length;
+      const color = CATEGORY_COLORS[cat as Category] ?? '#6b7280';
+      return (
+        <button
+          class="filter-btn"
+          data-filter={cat}
+          style={`--cat-color: ${color}`}
+        >
+          {cat}
+          <span class="filter-count">{count}</span>
+        </button>
+      );
+    })}
+  </div>
+
+  <div class="outils-sections">
+    {categories.map(cat => {
+      const catOutils = outils.filter(o => o.category === cat);
+      const color = CATEGORY_COLORS[cat as Category] ?? '#6b7280';
+      if (catOutils.length === 0) return null;
+      return (
+        <section class="category-section" data-cat={cat}>
+          <h2 class="category-title" style={`--cat-color: ${color}`}>
+            <span class="category-bar"></span>
+            {cat}
+            <span class="category-count">{catOutils.length}</span>
+          </h2>
+          <div class="outils-grid">
+            {catOutils.map(outil => (
+              <a
+                href={outil.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="outil-card"
+                style={`--cat-color: ${color}`}
+              >
+                <div class="outil-top">
+                  <span class="outil-badge">{cat}</span>
+                </div>
+                <div class="outil-body">
+                  <p class="outil-name">{outil.name}</p>
+                  <p class="outil-desc">{outil.description}</p>
+                </div>
+                <div class="outil-tags">
+                  {outil.tags.map(tag => (
+                    <span class="outil-tag">{tag}</span>
+                  ))}
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      );
+    })}
+  </div>
+</div>
+
+<script>
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const sections = document.querySelectorAll<HTMLElement>('.category-section');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = btn.dataset.filter;
+      sections.forEach(section => {
+        const visible = filter === 'all' || section.dataset.cat === filter;
+        (section as HTMLElement).style.display = visible ? '' : 'none';
+      });
+    });
+  });
+</script>
+
+<style>
+  .outils-wrapper {
+    margin-top: 1rem;
+  }
+
+  .outils-meta {
+    font-size: 0.85rem;
+    color: var(--sl-color-gray-3);
+    margin-bottom: 1.25rem;
+  }
+
+  /* Filtres */
+  .outils-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.85rem;
+    margin-top: 0;
+    border-radius: 9999px;
+    border: 1px solid var(--sl-color-gray-5);
+    background: transparent;
+    color: var(--sl-color-gray-2);
+    font-size: 0.8rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--cat-color, var(--sl-color-accent));
+    color: var(--cat-color, var(--sl-color-accent));
+  }
+
+  .filter-btn.active {
+    background: var(--sl-color-accent);
+    border-color: var(--sl-color-accent);
+    color: var(--sl-color-black);
+    font-weight: 500;
+  }
+
+  .filter-count {
+    font-size: 0.7rem;
+    opacity: 0.75;
+  }
+
+  /* Sections par catégorie */
+  .category-section {
+    margin-bottom: 3rem;
+  }
+
+  .category-title {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--sl-color-gray-6);
+    color: var(--sl-color-white);
+  }
+
+  .category-bar {
+    display: inline-block;
+    width: 3px;
+    height: 1.1rem;
+    border-radius: 2px;
+    background: var(--cat-color);
+    flex-shrink: 0;
+  }
+
+  .category-count {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 400;
+    padding: 0.15rem 0.55rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--cat-color) 15%, transparent);
+    color: var(--cat-color);
+  }
+
+  /* Grille de cards */
+  .outils-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 1rem;
+  }
+
+  .outil-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--sl-color-gray-6);
+    border-radius: 0.65rem;
+    background: var(--sl-color-bg-sidebar);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+  }
+
+  .outil-card:hover {
+    border-color: var(--cat-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--cat-color) 20%, transparent);
+    text-decoration: none;
+  }
+
+  .outil-top {
+    display: flex;
+    align-items: center;
+  }
+
+  .outil-badge {
+    font-size: 0.68rem;
+    font-weight: 500;
+    padding: 0.2rem 0.55rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--cat-color) 15%, transparent);
+    color: var(--cat-color);
+    border: 1px solid color-mix(in srgb, var(--cat-color) 30%, transparent);
+  }
+
+  .outil-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .outil-name {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--sl-color-white);
+    line-height: 1.3;
+  }
+
+  .outil-desc {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--sl-color-gray-3);
+  }
+
+  .outil-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.25rem;
+  }
+
+  .outil-tag {
+    font-size: 0.68rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 0.3rem;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-gray-3);
+  }
+
+  @media (max-width: 600px) {
+    .outils-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

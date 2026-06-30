@@ -1,0 +1,14 @@
+---
+title: Cartographie des outils
+description: Les outils que j'utilise en architecture, DevOps et sécurité applicative, organisés par domaine.
+tableOfContents: false
+prev: false
+next: false
+---
+
+import OutilsGrid from '../../components/OutilsGrid.astro';
+import { outils, CATEGORIES } from '../../data/outils';
+
+Une sélection d'outils organisés par domaine. Ce que j'utilise en production, en pentest ou en CTF au fil du temps.
+
+<OutilsGrid outils={outils} categories={CATEGORIES} />
