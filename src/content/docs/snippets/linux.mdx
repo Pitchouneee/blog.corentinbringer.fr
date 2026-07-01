@@ -1,0 +1,25 @@
+---
+title: "Linux"
+description: "Commandes Linux utiles pour la vérification d'intégrité, la manipulation de fichiers et le quotidien en ligne de commande."
+---
+
+# Pense-bête Linux
+
+## Vérifier l'empreinte SHA-256 d'un fichier
+
+**Le contexte :** Avant d'ouvrir ou d'exécuter un fichier téléchargé (archive, binaire, ISO...), il est utile de vérifier son empreinte SHA-256 pour s'assurer qu'il n'a pas été altéré.
+
+**Comment ça marche :** La commande `sha256sum -c` attend sur l'entrée standard une ligne au format `<hash>  <nom_du_fichier>` (deux espaces entre le hash et le nom). Si l'empreinte calculée correspond, elle affiche `OK`.
+
+```bash
+echo "<hash_attendu>  <fichier>" | sha256sum -c
+```
+
+### Exemple concret
+
+```bash
+echo "c5d9abda350472......4f0e5841986e3  file.zip" | sha256sum -c
+# file.zip: OK
+```
+
+> **Attention :** Le format exige exactement deux espaces entre le hash et le nom du fichier. Un seul espace ou un hash tronqué d'un caractère produit l'erreur `no properly formatted checksum lines found`.
