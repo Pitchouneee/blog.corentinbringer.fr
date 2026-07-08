@@ -92,6 +92,13 @@ export const outils: Outil[] = [
     tags: ['osint', 'reconnaissance', 'profiling'],
   },
   {
+    name: 'OSINT Framework',
+    description: 'Arborescence de ressources OSINT classées par type de donnée : e-mails, pseudos, réseaux sociaux, noms de domaine, géolocalisation. Point de départ pour cadrer une phase de reconnaissance.',
+    url: 'https://osintframework.com/',
+    category: 'Sécurité',
+    tags: ['osint', 'reconnaissance', 'ressources'],
+  },
+  {
     name: 'nosqlinjection_wordlists',
     description: 'Listes de payloads spécialisées pour les injections NoSQL sur MongoDB, CouchDB et Redis.',
     url: 'https://github.com/cr0hn/nosqlinjection_wordlists',
