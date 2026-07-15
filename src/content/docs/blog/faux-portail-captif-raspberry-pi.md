@@ -260,7 +260,7 @@ Pour montrer ce qui transite réellement sur un réseau ouvert, `tcpdump` enregi
 ```bash
 apt update && apt install tcpdump -y
 
-tcpdump -i wlan0 -v -w /var/www/html/capture_fideciel.pcap "tcp port 80 or tcp port 443"
+tcpdump -i wlan0 -v -w /var/www/html/capture.pcap "tcp port 80 or tcp port 443"
 ```
 
 - `-i wlan0` écoute l'interface du hotspot.
