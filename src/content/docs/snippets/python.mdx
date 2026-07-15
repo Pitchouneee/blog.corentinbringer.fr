@@ -1,0 +1,41 @@
+---
+title: "Python"
+description: "Commandes Python utiles pour la gestion des environnements virtuels et le quotidien en développement."
+---
+
+# Pense-bête Python
+
+## Créer et activer un environnement virtuel
+
+**Le contexte :** Un environnement virtuel isole les dépendances d'un projet Python pour éviter les conflits entre projets ou avec les paquets système.
+
+**Comment ça marche :** `python -m venv` crée un dossier contenant un interpréteur Python et un `pip` dédiés. L'activation modifie le `PATH` de la session courante pour pointer vers cet interpréteur isolé.
+
+```bash
+# Créer l'environnement virtuel
+python -m venv venv
+
+# Activer (Linux / macOS)
+source venv/bin/activate
+
+# Activer (Windows PowerShell)
+venv\Scripts\Activate.ps1
+
+# Activer (Windows cmd)
+venv\Scripts\activate.bat
+```
+
+Une fois activé, le nom de l'environnement apparaît entre parenthèses dans le prompt : `(venv)`.
+
+```bash
+# Installer les dépendances
+pip install -r requirements.txt
+
+# Figer les dépendances installées
+pip freeze > requirements.txt
+
+# Désactiver l'environnement
+deactivate
+```
+
+> **Remarque :** Sur Windows, l'exécution de scripts PowerShell peut être bloquée par la politique d'exécution. Lancer `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` si `Activate.ps1` est refusé.
