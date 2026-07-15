@@ -85,6 +85,8 @@ sudo apt install nginx php-fpm
 
 Les fichiers du portail (la page de connexion et ses assets) se placent dans `/var/www/html/`. Ils sont disponibles dans le dépôt du projet : [github.com/Pitchouneee/wifi-evil-twin/tree/main/captive_portal](https://github.com/Pitchouneee/wifi-evil-twin/tree/main/captive_portal).
 
+![Page du faux portail captif aux couleurs de l'entreprise, avec un formulaire d'identifiant Active Directory](../../../assets/blog/wifi-evil-twin/captive-portal.png)
+
 Pour que Nginx exécute les fichiers PHP, il faut modifier le bloc serveur par défaut dans `/etc/nginx/sites-available/default`. La configuration finale ajoute `index.php`, active le traitement PHP et intercepte les URL de détection de portail des systèmes mobiles (le rôle de ces dernières est détaillé plus bas) :
 
 ```nginx
@@ -293,6 +295,8 @@ mitmweb --mode transparent --web-host 0.0.0.0 --web-port 8081
 - `--mode transparent` intercepte le trafic dévié par `iptables`.
 - `--web-host 0.0.0.0` rend l'interface accessible depuis un autre PC.
 - `--web-port 8081` est le port de contrôle, à ne pas confondre avec le port 8080 qui reçoit le trafic intercepté.
+
+![Interface web de mitmweb affichant les requêtes HTTP et HTTPS interceptées des clients du hotspot](../../../assets/blog/wifi-evil-twin/mitmproxy.png)
 
 Le trafic web des clients Wi-Fi doit maintenant partir vers le proxy, sans casser l'accès au portail local. C'est là que la table `nat` a demandé quelques allers-retours avant de tomber juste. La version qui tient la route repose sur un ordre précis et sur une exclusion du réseau local :
 
