@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { unified } from '@astrojs/markdown-remark';
 import starlight from '@astrojs/starlight';
 import starlightBlog from 'starlight-blog';
 import mermaid from 'astro-mermaid';
@@ -8,6 +9,11 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://blog.corentinbringer.fr',
+	// Astro 7 utilise Sätteri par défaut, qui n'exécute pas les plugins remark/rehype
+	// injectés par les intégrations (Starlight, astro-mermaid).
+	markdown: {
+		processor: unified(),
+	},
 	integrations: [
 		starlight({
 			plugins: [
