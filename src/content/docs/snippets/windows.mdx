@@ -1,0 +1,137 @@
+---
+title: "Windows"
+description: "Commandes réseau Windows pour diagnostiquer une configuration IP, inspecter les connexions et ports, lire le cache ARP et interroger le DNS."
+---
+
+# Pense-bête Windows
+
+Les commandes ci-dessous s'exécutent depuis `cmd.exe` comme depuis PowerShell. Celles qui modifient l'état du poste (bail DHCP, cache DNS, table ARP) demandent une invite lancée en administrateur.
+
+## Configuration IP
+
+| Commande | Effet |
+| --- | --- |
+| `ipconfig` | Adresse IPv4/IPv6, masque et passerelle de chaque interface |
+| `ipconfig /all` | Vue détaillée : adresse MAC, serveur DHCP, serveurs DNS, durée du bail |
+| `ipconfig /release` | Libère le bail DHCP IPv4 (`/release6` pour IPv6) |
+| `ipconfig /renew` | Demande un nouveau bail au serveur DHCP |
+| `ipconfig /registerdns` | Force l'enregistrement dynamique du nom auprès du DNS |
+
+## Résolution DNS
+
+| Commande | Effet |
+| --- | --- |
+| `ipconfig /displaydns` | Affiche le cache de résolution local |
+| `ipconfig /flushdns` | Vide ce cache, utile après un changement d'enregistrement |
+| `nslookup <domaine>` | Interroge le serveur DNS configuré sur l'interface |
+| `nslookup <domaine> <serveur>` | Interroge un serveur DNS précis, pour comparer les réponses |
+| `nslookup -type=MX <domaine>` | Cible un type d'enregistrement (`A`, `AAAA`, `MX`, `TXT`, `NS`, `CNAME`, `SOA`) |
+
+Le signe `=` est obligatoire dans `-type=`. Sans lui, `nslookup` traite l'argument comme un nom à résoudre.
+
+## Connexions et ports
+
+| Commande | Effet |
+| --- | --- |
+| `netstat -a` | Toutes les connexions et tous les ports en écoute |
+| `netstat -n` | Adresses et ports en numérique, sans résolution DNS |
+| `netstat -o` | Ajoute le PID du processus propriétaire de la socket |
+| `netstat -ano` | Combinaison courante pour relier un port à un processus |
+| `netstat -anob` | Ajoute le nom de l'exécutable, nécessite une élévation |
+| `netstat -r` | Table de routage, équivalent de `route print` |
+
+### Relier un port à un processus
+
+**Le contexte :** un service refuse de démarrer parce que son port est déjà pris. `netstat` donne le PID, `tasklist` donne le nom.
+
+```bat
+netstat -ano | findstr :8080
+tasklist /fi "pid eq 1234"
+```
+
+## Table ARP
+
+| Commande | Effet |
+| --- | --- |
+| `arp -a` | Cache ARP courant, correspondances IP vers MAC |
+| `arp -d <IP>` | Supprime une entrée (`arp -d *` purge le cache) |
+| `arp -s <IP> <MAC>` | Ajoute une entrée statique |
+
+## Routage et chemin réseau
+
+| Commande | Effet |
+| --- | --- |
+| `ping <destination>` | Quatre échos ICMP (`-t` en continu, `-n <nombre>` pour fixer le total) |
+| `tracert <destination>` | Liste les routeurs traversés jusqu'à la destination |
+| `pathping <destination>` | Trace le chemin puis mesure les pertes saut par saut |
+| `route print` | Table de routage complète, IPv4 et IPv6 |
+
+`pathping` interroge chaque saut pendant environ 25 secondes. Sur un chemin de dix routeurs, comptez plusieurs minutes avant le rapport final.
+
+## Partages et NetBIOS
+
+| Commande | Effet |
+| --- | --- |
+| `net use` | Liste les connexions réseau et lecteurs montés |
+| `net use <lettre>: \\<serveur>\<partage>` | Monte un partage SMB |
+| `net use <lettre>: /delete` | Démonte le partage |
+| `net view \\<machine>` | Liste les partages exposés par une machine |
+| `nbtstat -n` | Noms NetBIOS enregistrés localement |
+| `nbtstat -a <nom>` | Table de noms d'une machine distante désignée par son nom |
+| `nbtstat -A <IP>` | Même chose, en désignant la machine par son adresse IP |
+| `nbtstat -c` | Cache des noms NetBIOS résolus |
+
+Le chemin UNC prend deux antislashs (`\\serveur\partage`). `net view` sans argument dépend du service Explorateur d'ordinateurs et de SMBv1, désactivé par défaut depuis Windows 10 : la commande retourne souvent une erreur `6118` sur un réseau récent.
+
+## Identité de la machine
+
+| Commande | Effet |
+| --- | --- |
+| `hostname` | Nom de l'ordinateur |
+| `getmac /v` | Adresses MAC avec le nom et l'état de chaque interface |
+
+## Accès distant
+
+| Commande | Effet |
+| --- | --- |
+| `telnet <hôte> <port>` | Test de connexion TCP brut |
+| `ssh <utilisateur>@<hôte> -p <port>` | Session SSH via le client OpenSSH intégré |
+| `mstsc /v:<hôte>:<port>` | Ouvre le Bureau à distance sur une machine donnée |
+
+Le client Telnet n'est pas installé par défaut. Il s'ajoute via la fonctionnalité facultative « Client Telnet », ou en ligne de commande :
+
+```bat
+dism /online /Enable-Feature /FeatureName:TelnetClient
+```
+
+Le client OpenSSH est présent depuis Windows 10 version 1809.
+
+## Équivalents PowerShell
+
+Les binaires historiques restent disponibles, mais les cmdlets renvoient des objets exploitables dans un pipeline plutôt que du texte à découper.
+
+| Commande historique | Cmdlet |
+| --- | --- |
+| `ipconfig /all` | `Get-NetIPConfiguration -Detailed` |
+| `netstat -ano` | `Get-NetTCPConnection` |
+| `nslookup <domaine>` | `Resolve-DnsName <domaine>` |
+| `ipconfig /flushdns` | `Clear-DnsClientCache` |
+| `arp -a` | `Get-NetNeighbor` |
+| `route print` | `Get-NetRoute` |
+| `ping <hôte>` | `Test-NetConnection <hôte>` |
+| `telnet <hôte> <port>` | `Test-NetConnection <hôte> -Port <port>` |
+
+`Test-NetConnection` remplace utilement `telnet` pour vérifier l'ouverture d'un port, sans installer de fonctionnalité supplémentaire :
+
+```powershell
+Test-NetConnection srv-app -Port 443
+# TcpTestSucceeded : True
+```
+
+### Trouver le processus derrière un port
+
+```powershell
+Get-NetTCPConnection -LocalPort 8080 |
+    Select-Object LocalAddress, LocalPort, State, OwningProcess,
+        @{ Name = 'Process'; Expression = { (Get-Process -Id $_.OwningProcess).ProcessName } }
+```

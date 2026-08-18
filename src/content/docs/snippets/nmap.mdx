@@ -1,0 +1,139 @@
+---
+title: "Nmap"
+description: "Options Nmap classées par usage : techniques de scan, découverte d'hôtes, sélection des ports, détection de services et d'OS, formats de sortie et scripts NSE."
+---
+
+# Pense-bête Nmap
+
+Les exemples ciblent `192.168.1.1`. Une cible peut aussi s'écrire en plage (`192.168.1.1-20`), en notation CIDR (`192.168.1.0/24`), en nom de domaine, ou se lire depuis un fichier avec `-iL cibles.txt`.
+
+Plusieurs options ci-dessous forgent des paquets bruts et demandent les privilèges root sous Linux, ou une invite administrateur avec Npcap sous Windows.
+
+## Techniques de scan
+
+| Option | Effet |
+| --- | --- |
+| `-sS` | Scan SYN, dit semi-ouvert : envoie un SYN et coupe avant la fin du handshake |
+| `-sT` | Scan TCP connect, handshake complet via l'appel système `connect()` |
+| `-sU` | Scan UDP |
+| `-sA` | Scan ACK, cartographie les règles de filtrage |
+| `-sW` | Scan TCP Window, variante du scan ACK exploitant la taille de fenêtre |
+| `-sM` | Scan Maimon, sonde avec le drapeau FIN/ACK |
+| `-sN` `-sF` `-sX` | Scans Null, FIN et Xmas, sans drapeau, FIN seul, ou FIN/PSH/URG |
+
+```bash
+nmap -sS 192.168.1.1
+```
+
+`-sS` est le scan par défaut avec les privilèges suffisants, `-sT` sinon. Le scan SYN reste le plus rapide et le plus discret des deux, puisque la connexion n'est jamais complétée côté applicatif.
+
+`-sA` ne détermine pas si un port est ouvert : il distingue les ports filtrés des non filtrés, ce qui sert à déduire la présence et le comportement d'un pare-feu.
+
+## Découverte d'hôtes
+
+| Option | Effet |
+| --- | --- |
+| `-sL` | Liste les cibles sans envoyer de paquet de scan |
+| `-sn` | Découverte d'hôtes seule, aucun port scanné |
+| `-Pn` | Considère toutes les cibles actives, aucune découverte préalable |
+| `-PS<ports>` | Découverte par SYN sur les ports indiqués |
+| `-PA<ports>` | Découverte par ACK |
+| `-PU<ports>` | Découverte par UDP |
+| `-n` | Désactive la résolution DNS inverse |
+
+```bash
+nmap -sn 192.168.1.0/24
+```
+
+`-Pn` sert quand la cible ignore les sondes de découverte, cas courant derrière un pare-feu qui bloque l'ICMP. Le scan devient plus long, chaque port étant sondé même sur des adresses sans machine.
+
+`-sL` effectue tout de même une résolution DNS inverse. Ajouter `-n` pour rester totalement passif vis-à-vis de la cible.
+
+## Sélection des ports
+
+| Option | Effet |
+| --- | --- |
+| `-p 21` | Un port précis |
+| `-p 21-100` | Une plage de ports |
+| `-p U:53,T:21-25,80` | Ports UDP et TCP dans la même expression |
+| `-p-` | Les 65535 ports |
+| `-p http,https` | Désignation par nom de service, tel que résolu dans `nmap-services` |
+| `-F` | Scan rapide, limité aux 100 ports les plus courants |
+| `--top-ports 2000` | Les N ports les plus fréquents |
+
+```bash
+nmap -p- 192.168.1.1
+nmap -sS -sU -p U:53,161,T:21-25,80,443 192.168.1.1
+```
+
+La liste de ports ne tolère pas d'espace après les virgules : `-p http,https` fonctionne, `-p http, https` fait interpréter `https` comme une seconde cible.
+
+La syntaxe `U:` n'a d'effet que si le scan UDP est demandé. Combiner `-sU` avec un type de scan TCP pour couvrir les deux protocoles en une passe.
+
+## Détection de services et d'OS
+
+| Option | Effet |
+| --- | --- |
+| `-sV` | Identifie le service et sa version derrière chaque port ouvert |
+| `--version-intensity 0-9` | Ajuste le nombre de sondes de version, 9 pour les essayer toutes |
+| `-O` | Détection d'OS par empreinte de la pile TCP/IP |
+| `--osscan-guess` | Propose l'OS le plus probable quand l'empreinte ne correspond pas exactement |
+| `-A` | Active `-O`, `-sV`, `-sC` et `--traceroute` en une option |
+
+```bash
+nmap -sV -O 192.168.1.1
+```
+
+La détection d'OS demande au moins un port ouvert et un port fermé pour comparer les réponses. Elle reste imprécise à travers un équipement qui réécrit les en-têtes, NAT ou pare-feu applicatif.
+
+## Scripts NSE
+
+| Option | Effet |
+| --- | --- |
+| `-sC` | Exécute les scripts de la catégorie `default` |
+| `--script <nom>` | Exécute un script ou une catégorie précise |
+| `--script vuln` | Catégorie orientée recherche de vulnérabilités connues |
+| `--script-args <clé>=<valeur>` | Passe des arguments au script |
+| `--script-help <nom>` | Affiche la documentation d'un script sans l'exécuter |
+
+```bash
+nmap -sV --script=http-title,ssl-cert -p 443 192.168.1.1
+```
+
+Les scripts sont des fichiers Lua installés dans `/usr/share/nmap/scripts/`. Un `ls` dans ce répertoire donne la liste complète disponible localement.
+
+## Rythme du scan
+
+| Option | Effet |
+| --- | --- |
+| `-T0` à `-T5` | Modèles de temporisation, de `paranoid` à `insane` |
+| `--min-rate <n>` | Plancher de paquets envoyés par seconde |
+| `--max-retries <n>` | Limite les retransmissions par port |
+| `--host-timeout <durée>` | Abandonne une cible qui dépasse la durée indiquée |
+
+`-T4` est le compromis courant sur un réseau local ou une liaison correcte. `-T3` est la valeur par défaut. Les modèles lents `-T0` et `-T1` espacent les sondes de plusieurs secondes à plusieurs minutes, ce qui allonge un scan complet à plusieurs heures.
+
+## Sortie
+
+| Option | Effet |
+| --- | --- |
+| `-oN <fichier>` | Sortie normale, identique à l'affichage console |
+| `-oX <fichier>` | Sortie XML, exploitable par un outil tiers |
+| `-oG <fichier>` | Sortie grepable, une ligne par hôte |
+| `-oA <base>` | Écrit les trois formats avec le même nom de base |
+| `-v` `-vv` | Augmente le niveau de détail pendant le scan |
+| `--append-output` | Ajoute au fichier existant au lieu de l'écraser |
+| `--resume <fichier>` | Reprend un scan interrompu depuis sa sortie normale ou grepable |
+
+```bash
+nmap -sS -sV -oA scan-lan 192.168.1.0/24
+# produit scan-lan.nmap, scan-lan.xml et scan-lan.gnmap
+```
+
+### Extraire les hôtes actifs d'une sortie grepable
+
+```bash
+grep "Status: Up" scan-lan.gnmap | cut -d' ' -f2
+```
+
+Le format grepable est figé depuis des années et convient aux traitements en ligne de commande. Pour un usage programmatique durable, le XML reste le format maintenu, et `nmap-parse-output` ou une bibliothèque dédiée évitent d'écrire un parseur.
