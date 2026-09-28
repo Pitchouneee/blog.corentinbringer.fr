@@ -275,12 +275,18 @@ strings -a shellcode.bin
 
 Je ne fais pas du reverse engineering au quotidien. La démarche décrite ici est celle d'un praticien qui a voulu comprendre ce qu'il avait sous les yeux au lieu de le classer sans l'ouvrir. Si des personnes dont c'est le métier repèrent une approximation ou une méthode plus directe, je suis preneur.
 
+## Signalement et retrait du dépôt
+
+Le 31 août 2026, j'ai signalé le dépôt à l'équipe Trust & Safety de GitHub dans la catégorie « logiciel malveillant activement exploité ». Le signalement décrivait les deux charges hébergées : le binaire Linux de minage et le script `update.ps1`. Pour que l'adresse du serveur de commande puisse être vérifiée sans me croire sur parole, j'ai joint la procédure de cet article : conversion du tableau en binaire, désassemblage avec `objdump`, puis lecture de l'instruction `movabs r12, 0x499de42b24210002` à l'offset `0xe4`.
+
+Le 1er septembre 2026, GitHub a confirmé une violation de ses conditions d'utilisation et a supprimé le dépôt ainsi que le compte associé. La démarche reproductible a servi une seconde fois : elle a permis à un tiers de contrôler la conclusion avant d'agir.
+
 ## Indicateurs
 
 ```
 43.228.157.73:8484   (C2 du reverse shell Windows)
 update.ps1           (injecteur de shellcode en mémoire)
-https://github.com/AlishaSharylz2/Windows-Update-Assistant   (hébergement, signalé pour retrait)
+https://github.com/AlishaSharylz2/Windows-Update-Assistant   (hébergement, supprimé par GitHub le 1er septembre 2026)
 ```
 
 ## Sources

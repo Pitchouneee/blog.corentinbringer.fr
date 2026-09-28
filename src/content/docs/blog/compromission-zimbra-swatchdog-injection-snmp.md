@@ -209,6 +209,8 @@ La méthode d'extraction de cette adresse depuis le shellcode, avec les deux pi�
 
 Ce composant change la portée de l'incident. La menace initiale visait un serveur Linux, et l'attaquant disposait sur la même infrastructure de quoi opérer sur un parc Windows. La vérification des flux sortants vers cette adresse et la recherche d'exécutions PowerShell anormales sur le parc bureautique deviennent des actions à part entière.
 
+Le dépôt a été signalé à l'équipe Trust & Safety de GitHub le 31 août 2026, avec la charge Linux, le portefeuille Monero et la démarche permettant de retrouver l'adresse du serveur de commande. GitHub a confirmé le lendemain une violation de ses conditions d'utilisation et a supprimé le dépôt ainsi que le compte associé. Les liens de téléchargement utilisés par les charges d'exploitation ne répondent donc plus depuis cette plateforme.
+
 ## Indicateurs de compromission
 
 Adresses sources des injections SMTP :
@@ -236,7 +238,7 @@ Infrastructures de charge et de commande :
 
 Les blocs `154.70.152.0/24` et `147.182.224.0/24` méritent une recherche dans l'ensemble des journaux de flux.
 
-Hébergement secondaire de la charge, signalé à GitHub pour retrait :
+Hébergement secondaire de la charge, signalé à GitHub le 31 août 2026, dépôt et compte supprimés par GitHub le 1er septembre 2026 :
 
 ```
 https://github.com/AlishaSharylz2/Windows-Update-Assistant
