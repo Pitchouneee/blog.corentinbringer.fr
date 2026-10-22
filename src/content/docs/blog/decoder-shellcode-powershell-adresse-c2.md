@@ -4,12 +4,8 @@ date: 2026-09-07
 authors:
   - corentin
 tags:
-  - reverse-engineering
-  - shellcode
-  - powershell
+  - securite
   - dfir
-  - metasploit
-  - threat-intelligence
 excerpt: Sur le dépôt GitHub qui hébergeait la charge Linux d'une compromission, un fichier update.ps1 traînait à côté. Six lignes de PowerShell et un long tableau d'octets. Récit de la démarche suivie pour en sortir l'adresse du serveur de commande, et des deux pièges qui font tomber sur un mauvais port.
 ---
 

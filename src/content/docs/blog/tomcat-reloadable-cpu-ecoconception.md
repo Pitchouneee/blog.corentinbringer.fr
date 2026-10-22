@@ -5,11 +5,8 @@ authors:
   - corentin
 tags:
   - java
-  - tomcat
-  - kubernetes
-  - performance
+  - devops
   - ecoconception
-  - green-it
 excerpt: Des pics CPU à 100 % pendant 10 secondes, toutes les 20 secondes, sur nos pods Kubernetes comme sur nos vieilles VM Tomcat. La cause tient en un attribut de configuration hérité du développement, et la correction en une ligne.
 ---
 

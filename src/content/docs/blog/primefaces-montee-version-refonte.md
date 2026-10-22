@@ -5,12 +5,7 @@ authors:
   - corentin
 tags:
   - java
-  - spring
-  - primefaces
-  - jsf
-  - migration
-  - dette-technique
-  - strangler-fig
+  - architecture
 excerpt: Une dépendance PrimeFaces 7 récupérée puis peut-être modifiée, aucun moyen de le vérifier, et l'idée de repasser sur la version officielle. Récit d'un arbitrage où la simple montée de version s'est révélée être une réécriture, et où l'effort est finalement parti ailleurs.
 ---
 

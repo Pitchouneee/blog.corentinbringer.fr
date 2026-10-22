@@ -4,12 +4,8 @@ date: 2026-07-15
 authors:
   - corentin
 tags:
-  - raspberry-pi
-  - wifi
-  - portail-captif
-  - purple-team
-  - iptables
-  - mitmproxy
+  - securite
+  - reseau
 excerpt: Un Raspberry Pi caché dans un faux plafond, un point d'accès Wi-Fi ouvert et un portail captif aux couleurs de l'entreprise suffisent à collecter des identifiants Active Directory. Récit d'un montage purple team, de la carte SD au proxy transparent.
 ---
 

@@ -4,13 +4,8 @@ date: 2026-09-07
 authors:
   - corentin
 tags:
-  - zimbra
+  - securite
   - dfir
-  - forensic
-  - injection-de-commande
-  - threat-intelligence
-  - rgpd
-  - cryptominage
 excerpt: Un serveur de messagerie Zimbra en fin de support, une vulnérabilité dans un composant de supervision, et une charge malveillante qui arrive par le message d'erreur d'un courriel rejeté. Récit d'une investigation, du vecteur d'injection jusqu'au portefeuille Monero de l'attaquant.
 ---
 

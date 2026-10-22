@@ -4,10 +4,8 @@ date: 2026-06-30
 authors:
   - corentin
 tags:
-  - http
-  - rfc
-  - api
-  - rest
+  - reseau
+  - architecture
 excerpt: POST a longtemps servi de palliatif pour les requêtes de lecture trop grandes pour une URL. La RFC 10008 officialise enfin un verbe dédié à ce cas.
 ---
 
